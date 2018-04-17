@@ -28,12 +28,13 @@ def get_data():
     # read data from file
 
     if dataname == 'basque':
-        data = np.array(pd.read_csv("data/basque-y.csv"))
+        y = np.array(pd.read_csv("data/basque-y.csv"))
+        x = np.array(pd.read_csv("data/basque-x.csv"))
         timesteps = 14-1
 
-    #data = data.reshape(data.shape[0], data.shape[1], 1) 
+    data = np.hstack((y,x))
 
-    print('data shape', data.shape)     
+    print('raw data shape', data.shape)     
 
     dataX = []
     for i in range(len(data) - timesteps - 1):
@@ -43,6 +44,7 @@ def get_data():
 
 if __name__ == "__main__":
     x = get_data()
+    print('input shape', x.shape) 
     input_dim = x.shape[-1] 
     timesteps = x.shape[1] 
     batch_size = 1
@@ -55,7 +57,7 @@ if __name__ == "__main__":
         epsilon_std=1.)
 
     filepath="results/{}".format(dataname) + "/weights.{epoch:02d}-{val_loss:.3f}.hdf5"
-    checkpointer = ModelCheckpoint(filepath=filepath, monitor='val_loss', verbose=1, period=1, save_best_only=True)
+    checkpointer = ModelCheckpoint(filepath=filepath, monitor='val_loss', verbose=1, period=10, save_best_only=True)
 
     csv_logger = CSVLogger('results/{}/training_log_{}.csv'.format(dataname,dataname), separator=',', append=False)
 
