@@ -26,32 +26,46 @@ def get_data():
     # read data from file
 
     if dataname == 'basque':
-        y = np.array(pd.read_csv("data/basque-y.csv"))
-        x = np.array(pd.read_csv("data/basque-x.csv"))
-        timesteps = 14-1
+        n_post = 1 
+        n_pre = 14-1
+        seq_len = 43
 
+    if dataname == 'california':
+        n_post  = 1 
+        n_pre =  19-1 
+        seq_len = 31
+
+    if dataname == 'germany':
+        n_post  = 1 
+        n_pre =  30-1 
+        seq_len = 44   
+        
+    y = np.array(pd.read_csv("data/{}-y.csv".format(dataname)))
+    x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))  
+    
     data = np.hstack((y,x))
 
-    print('raw data shape', data.shape)    
+    print('raw data shape', data.shape)     
 
-    dataX = []
-    for i in range(len(data) - timesteps - 1):
-        x = data[i:(i+timesteps), :]
-        dataX.append(x)
-    return np.array(dataX)
+    dataX =[]
+    for i in range(seq_len - n_pre - n_post):
+        dataX.append(data[i:i+n_pre])
+    return np.array(dataX), n_pre, n_post
 
 if __name__ == "__main__":
-    x = get_data()
-    print('input shape', x.shape) 
-    input_dim = x.shape[-1] 
-    timesteps = x.shape[1] 
+    x, n_pre, n_post = get_data() 
+    nb_features = x.shape[2]
     batch_size = 1
 
-    vae, enc, gen = create_lstm_vae(input_dim, 
-        timesteps=timesteps, 
+    vae, enc, gen = create_lstm_vae(nb_features, 
+        n_pre=n_pre, 
+        n_post=n_post,
         batch_size=batch_size, 
         intermediate_dim=32,
         latent_dim=100,
+        initialization = 'glorot_normal',
+        activation = 'linear',
+        lr = 0.001,
         epsilon_std=1.)
 
     # Load weights
