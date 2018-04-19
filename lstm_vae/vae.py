@@ -4,6 +4,7 @@ from keras.models import Sequential, Model
 from keras.layers import Input, LSTM, RepeatVector
 from keras.layers.core import Flatten, Dense, Dropout, Lambda
 from keras.optimizers import SGD, RMSprop, Adam
+from keras import regularizers
 from keras import objectives
 
 
@@ -16,6 +17,8 @@ def create_lstm_vae(nb_features,
     initialization,
     activation,
     lr,
+    penalty,
+    dropout,
     epsilon_std=1.):
 
     """
@@ -57,7 +60,7 @@ def create_lstm_vae(nb_features,
     
     # decoded LSTM layer
     decoder_h = LSTM(intermediate_dim, kernel_initializer=initialization, return_sequences=True)
-    decoder_mean = LSTM(nb_features, kernel_initializer=initialization, activation=activation, return_sequences=True)
+    decoder_mean = LSTM(nb_features, kernel_initializer=initialization, activation=activation, kernel_regularizer=regularizers.l2(penalty), return_sequences=True)
 
     h_decoded = RepeatVector(n_post)(z)
     h_decoded = decoder_h(h_decoded)

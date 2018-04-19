@@ -66,6 +66,8 @@ if __name__ == "__main__":
         initialization = 'glorot_normal',
         activation = 'linear',
         lr = 0.001,
+        penalty=0.001,
+        dropout=0.5,
         epsilon_std=1.)
 
     # Load weights
