@@ -51,6 +51,7 @@ def create_lstm_vae(nb_features,
         z_mean, z_log_sigma = args
         epsilon = K.random_normal(shape=(batch_size, latent_dim),
                                   mean=0., stddev=epsilon_std)
+        epsilon = K.exp(epsilon) # log-normal sampling
         # return z_mean + K.exp(z_log_sigma) * epsilon
         return z_mean + z_log_sigma * epsilon
 

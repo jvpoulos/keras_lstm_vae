@@ -56,18 +56,20 @@ if __name__ == "__main__":
     x, n_pre, n_post = get_data() 
     nb_features = x.shape[2]
     batch_size = 1
+    dr=0.5
+    penalty=0.001
 
     vae, enc, gen = create_lstm_vae(nb_features, 
         n_pre=n_pre, 
         n_post=n_post,
         batch_size=batch_size, 
         intermediate_dim=32,
-        latent_dim=100,
+        latent_dim=200,
         initialization = 'glorot_normal',
         activation = 'linear',
         lr = 0.001,
-        penalty=0.001,
-        dropout=0.5,
+        penalty=penalty,
+        dropout=dr,
         epsilon_std=1.)
 
     # Load weights
