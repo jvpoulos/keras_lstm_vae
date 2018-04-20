@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from keras.utils.vis_utils import plot_model, model_to_dot
 from keras.callbacks import ModelCheckpoint, CSVLogger
 
 from lstm_vae import create_lstm_vae
@@ -58,6 +59,12 @@ if __name__ == "__main__":
     batch_size = 1
     dr=0.5
     penalty=0.001
+    lr=0.001
+    period=10 # checkpoint period
+
+    if dataname == 'germany':
+        penalty=0
+        lr=0.00005
 
     vae, enc, gen = create_lstm_vae(nb_features, 
         n_pre=n_pre, 
@@ -67,7 +74,7 @@ if __name__ == "__main__":
         latent_dim=200,
         initialization = 'glorot_normal',
         activation = 'linear',
-        lr = 0.001,
+        lr = lr,
         penalty=penalty,
         dropout=dr,
         epsilon_std=1.)
@@ -85,3 +92,17 @@ if __name__ == "__main__":
     print('predictions shape =', preds.shape)
 
     np.savetxt("{}-{}-test.csv".format(filename,dataname), preds, delimiter=",")
+
+    # Visualize model
+
+    plot_model(vae, to_file='results/vae.png', # Plot graph of model
+    show_shapes = False,
+    show_layer_names = True)
+
+    plot_model(enc, to_file='results/enc.png', # Plot graph of model
+    show_shapes = False,
+    show_layer_names = True)
+
+    plot_model(gen, to_file='results/gen.png', # Plot graph of model
+    show_shapes = False,
+    show_layer_names = True)

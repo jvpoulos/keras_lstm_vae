@@ -60,6 +60,12 @@ if __name__ == "__main__":
     batch_size = 1
     dr=0.5
     penalty=0.001
+    lr=0.001
+    period=10 # checkpoint period
+
+    if dataname == 'germany':
+        penalty=0
+        lr=0.00005
 
     vae, enc, gen = create_lstm_vae(nb_features, 
         n_pre=n_pre, 
@@ -69,13 +75,13 @@ if __name__ == "__main__":
         latent_dim=200,
         initialization = 'glorot_normal',
         activation = 'linear',
-        lr = 0.001,
+        lr = lr,
         penalty=penalty,
         dropout=dr,
         epsilon_std=1.)
 
     filepath="results/{}".format(dataname) + "/weights.{epoch:02d}-{val_loss:.3f}.hdf5"
-    checkpointer = ModelCheckpoint(filepath=filepath, monitor='val_loss', verbose=1, period=10, save_best_only=True)
+    checkpointer = ModelCheckpoint(filepath=filepath, monitor='val_loss', verbose=1, period=period, save_best_only=True)
 
     csv_logger = CSVLogger('results/{}/training_log_{}.csv'.format(dataname,dataname), separator=',', append=False)
 
