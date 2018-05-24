@@ -18,6 +18,7 @@ def create_lstm_vae(nb_features,
     activation,
     lr,
     penalty,
+    dropout,
     epsilon_std=1.):
 
     """
