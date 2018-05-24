@@ -17,7 +17,7 @@ from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 
 analysis = sys.argv[-1] # 'treated' or 'control'
-dataname = sys.argv[-2] 
+dataname = sys.argv[-3] 
 
 def set_trace():
     from IPython.core.debugger import Pdb
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         epsilon_std=1.)
 
     # Load weights
-    filename = sys.argv[-1]
+    filename = sys.argv[-2]
     vae.load_weights(filename, by_name=True)
 
     print("Created model and loaded weights from file")
