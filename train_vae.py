@@ -8,7 +8,7 @@ from lstm_vae import create_lstm_vae
 # Select gpu
 import sys
 import os
-gpu = sys.argv[-3]
+gpu = sys.argv[-4]
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
 os.environ["CUDA_VISIBLE_DEVICES"]= "{}".format(gpu)
 

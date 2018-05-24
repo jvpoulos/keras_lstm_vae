@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 
 from lstm_vae import create_lstm_vae
 
+def set_trace():
+    from IPython.core.debugger import Pdb
+    import sys
+    Pdb(color_scheme='Linux').set_trace(sys._getframe().f_back)
+
 def get_data():
     # read data from file
     data = np.fromfile('sample_data.dat').reshape(419,13)
@@ -11,13 +16,13 @@ def get_data():
     for i in range(len(data) - timesteps - 1):
         x = data[i:(i+timesteps), :]
         dataX.append(x)
-    return np.array(dataX)
+    return np.array(dataX) # samples x time-steps x features
 
 
 if __name__ == "__main__":
     x = get_data()
-    input_dim = x.shape[-1] # 13
-    timesteps = x.shape[1] # 3
+    input_dim = x.shape[-1] # 13 features
+    timesteps = x.shape[1] # 3 timesteps
     batch_size = 1
 
     vae, enc, gen = create_lstm_vae(input_dim, 
