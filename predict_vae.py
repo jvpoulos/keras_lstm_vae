@@ -45,13 +45,13 @@ def get_data():
     y = np.array(pd.read_csv("data/{}-y.csv".format(dataname)))
     x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))  
     
-
     if analysis == 'treated-gans': 
-        print('raw x shape', x.shape)   
+        print('raw x shape', x.shape)    
 
         dX = []
         for i in range(seq_len-n_pre-n_post):
             dX.append(y[i:i+n_pre]) # treated is input
+        return np.array(dX), n_pre, n_post
 
     if analysis == 'control': 
 
@@ -60,10 +60,7 @@ def get_data():
         dX = []
         for i in range(seq_len-n_pre-n_post):
             dX.append(x[i:i+n_pre]) # controls are inputs
-    
-    dataX = np.array(dX)
-
-    print('dataX shape:', dataX.shape)   
+        return np.array(dX), n_pre, n_post     
 
 if __name__ == "__main__":
     x, n_pre, n_post = get_data() 
