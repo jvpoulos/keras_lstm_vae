@@ -44,14 +44,25 @@ def get_data():
     y = np.array(pd.read_csv("data/{}-y.csv".format(dataname)))
     x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))  
     
-    data = np.hstack((y,x))
 
-    print('raw data shape', data.shape)     
+    if analysis == 'treated-gans': 
+        print('raw x shape', x.shape)   
 
-    dataX =[]
-    for i in range(seq_len - n_pre - n_post):
-        dataX.append(data[i:i+n_pre])
-    return np.array(dataX), n_pre, n_post
+        dX = []
+        for i in range(seq_len-n_pre-n_post):
+            dX.append(y[i:i+n_pre]) # treated is input
+
+    if analysis == 'control': 
+
+        print('raw x shape', x.shape)   
+
+        dX = []
+        for i in range(seq_len-n_pre-n_post):
+            dX.append(x[i:i+n_pre]) # controls are inputs
+    
+    dataX = np.array(dX)
+
+    print('dataX shape:', dataX.shape)   
 
 if __name__ == "__main__":
     x, n_pre, n_post = get_data() 
@@ -76,7 +87,6 @@ if __name__ == "__main__":
         activation = 'linear',
         lr = lr,
         penalty=penalty,
-        dropout=dr,
         epsilon_std=1.)
 
     # Load weights

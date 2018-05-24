@@ -18,7 +18,6 @@ def create_lstm_vae(nb_features,
     activation,
     lr,
     penalty,
-    dropout,
     epsilon_std=1.):
 
     """
@@ -38,14 +37,14 @@ def create_lstm_vae(nb_features,
         - [Generating sentences from a continuous space](https://arxiv.org/abs/1511.06349)
     """
 
-    x = Input(shape=(n_pre, nb_features))
+    x = Input(shape=(n_pre, nb_features), name='Encoder_inputs')
 
     # LSTM encoding
-    h = LSTM(intermediate_dim, kernel_initializer=initialization)(x)
+    h = LSTM(intermediate_dim, kernel_initializer=initialization, name='Encoder')(x)
 
     # VAE Z layer
-    z_mean = Dense(latent_dim)(h)
-    z_log_sigma = Dense(latent_dim)(h)
+    z_mean = Dense(latent_dim, name='z_mean')(h)
+    z_log_sigma = Dense(latent_dim, name='z_log_sigma')(h)
     
     def sampling(args):
         z_mean, z_log_sigma = args
@@ -57,13 +56,13 @@ def create_lstm_vae(nb_features,
 
     # note that "output_shape" isn't necessary with the TensorFlow backend
     # so you could write `Lambda(sampling)([z_mean, z_log_sigma])`
-    z = Lambda(sampling, output_shape=(latent_dim,))([z_mean, z_log_sigma])
+    z = Lambda(sampling, output_shape=(latent_dim,), name='Sampling')([z_mean, z_log_sigma])
     
     # decoded LSTM layer
-    decoder_h = LSTM(intermediate_dim, kernel_initializer=initialization, return_sequences=True)
-    decoder_mean = LSTM(nb_features, kernel_initializer=initialization, activation=activation, kernel_regularizer=regularizers.l2(penalty), return_sequences=True)
+    decoder_h = LSTM(intermediate_dim, kernel_initializer=initialization, return_sequences=True, name='Decoder_1')
+    decoder_mean = LSTM(nb_features, kernel_initializer=initialization, activation=activation, kernel_regularizer=regularizers.l2(penalty), return_sequences=True, name='Decoder_2')
 
-    h_decoded = RepeatVector(n_post)(z)
+    h_decoded = RepeatVector(n_post, name='Repeat')(z)
     h_decoded = decoder_h(h_decoded)
 
     # decoded layer

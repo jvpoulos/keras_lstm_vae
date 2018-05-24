@@ -43,22 +43,31 @@ def get_data():
         seq_len = 44   
         
     y = np.array(pd.read_csv("data/{}-y.csv".format(dataname)))
-    x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))    
+    x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))
 
-    data = np.hstack((y,x))
+    if analysis == 'treated-gans': 
+        print('raw x shape', x.shape)    
 
-    print('raw data shape', data.shape)     
+        dX = []
+        for i in range(seq_len-n_pre-n_post):
+            dX.append(y[i:i+n_pre]) # treated is input
 
-    dataX =[]
-    for i in range(seq_len - n_pre - n_post):
-        dataX.append(data[i:i+n_pre])
-    return np.array(dataX), n_pre, n_post
+    if analysis == 'control': 
+
+        print('raw x shape', x.shape)   
+
+        dX = []
+        for i in range(seq_len-n_pre-n_post):
+            dX.append(x[i:i+n_pre]) # controls are inputs
+    
+    dataX = np.array(dX)
+
+    print('dataX shape:', dataX.shape)        
 
 if __name__ == "__main__":
     x, n_pre, n_post = get_data() 
     nb_features = x.shape[2]
     batch_size = 1
-    dr=0.5
     penalty=0.001
     lr=0.001
     period=10 # checkpoint period
