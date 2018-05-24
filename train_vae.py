@@ -15,9 +15,10 @@ os.environ["CUDA_VISIBLE_DEVICES"]= "{}".format(gpu)
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 
+analysis = sys.argv[-1] # 'treated' or 'control'
 dataname = sys.argv[-2] 
 
-epochs = int(sys.argv[-1])
+epochs = int(sys.argv[-3])
 
 def set_trace():
     from IPython.core.debugger import Pdb
@@ -89,10 +90,10 @@ if __name__ == "__main__":
         dropout=dr,
         epsilon_std=1.)
 
-    filepath="results/{}".format(dataname) + "/weights.{epoch:02d}-{val_loss:.3f}.hdf5"
+    filepath="results/{}/{}".format(dataname,analysis) + "/weights.{epoch:02d}-{val_loss:.3f}.hdf5"
     checkpointer = ModelCheckpoint(filepath=filepath, monitor='val_loss', verbose=1, period=period, save_best_only=True)
 
-    csv_logger = CSVLogger('results/{}/training_log_{}.csv'.format(dataname,dataname), separator=',', append=False)
+    csv_logger = CSVLogger('results/{}/{}/training_log_{}_{}.csv'.format(dataname,analysis,dataname,analysis), separator=',', append=False)
 
     vae.fit(x, x, 
         epochs=epochs,

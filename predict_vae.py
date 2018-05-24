@@ -16,6 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]= "{}".format(gpu)
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 
+analysis = sys.argv[-1] # 'treated' or 'control'
 dataname = sys.argv[-2] 
 
 def set_trace():
