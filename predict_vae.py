@@ -85,6 +85,7 @@ if __name__ == "__main__":
         activation = 'linear',
         lr = lr,
         penalty=penalty,
+        dropout=dr,
         epsilon_std=1.)
 
     # Load weights

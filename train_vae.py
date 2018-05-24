@@ -69,6 +69,7 @@ if __name__ == "__main__":
     batch_size = 1
     penalty=0.001
     lr=0.001
+    dr=0.5
     period=10 # checkpoint period
 
     if dataname == 'germany':
