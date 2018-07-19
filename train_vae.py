@@ -42,7 +42,37 @@ def get_data():
         n_post  = 1 
         n_pre =  30-1 
         seq_len = 44   
-        
+
+    if dataname == 'west-revpc':
+        n_post  = 1 
+        n_pre =  52-1 
+        seq_len = 119  
+
+    if dataname == 'west-exppc':
+        n_post  = 1 
+        n_pre =  51-1 
+        seq_len = 117  
+
+    if dataname == 'west-educpc':
+        n_post  = 1 
+        n_pre =  37-1 
+        seq_len = 99  
+
+    if dataname == 'south-revpc':
+        n_post  = 1 
+        n_pre =  36-1 
+        seq_len = 97  
+
+    if dataname == 'south-exppc':
+        n_post  = 1 
+        n_pre =  37-1 
+        seq_len = 98  
+
+    if dataname == 'south-educpc':
+        n_post  = 1 
+        n_pre =  33-1 
+        seq_len = 90 
+                
     y = np.array(pd.read_csv("data/{}-y.csv".format(dataname)))
     x = np.array(pd.read_csv("data/{}-x.csv".format(dataname)))
 
